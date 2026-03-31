@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barktopia — Bored Dog? Not Anymore.</title>
+  <meta name="description" content="Interactive enrichment toys and supplements that keep your dog mentally stimulated and happy.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FFF8F0',
+            peach: '#FFF0E0',
+            orange: '#FF6B35',
+            'orange-dark': '#E55A2B',
+            teal: '#1B4965',
+            'teal-light': '#2A6F97',
+            yellow: '#FFD166',
+            mint: '#06D6A0',
+            'mint-bg': '#E8FFF6',
+            'text-dark': '#1A1A2E',
+            'text-muted': '#5C5C7A',
+          },
+          fontFamily: {
+            display: ['Fredoka', 'sans-serif'],
+            body: ['Nunito', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-family: 'Nunito', sans-serif; background: #FFF8F0; color: #1A1A2E; }
+    html.lenis, html.lenis body { height: auto; }
+
+    .float-slow { animation: floatSlow 4s ease-in-out infinite; }
+    .float-med { animation: floatMed 3s ease-in-out infinite; }
+    @keyframes floatSlow { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    @keyframes floatMed { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-8px) rotate(2deg)} }
+
+    .paw { position: absolute; opacity: 0.05; pointer-events: none; font-size: 36px; }
+
+    /* Marquee */
+    .marquee-track { display: flex; animation: marquee 20s linear infinite; }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+    .sticker {
+      display: inline-block;
+      background: #FFD166;
+      color: #1A1A2E;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      transform: rotate(-3deg);
+      box-shadow: 2px 3px 0 rgba(0,0,0,0.08);
+    }
+
+    .featured-card {
+      background: #FFF8F0;
+      border-radius: 24px;
+      border: 3px solid rgba(26,26,46,0.05);
+      box-shadow: 0 6px 24px rgba(26,26,46,0.06);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+    .featured-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 16px 48px rgba(255,107,53,0.15);
+    }
+
+    .mini-card {
+      background: #FFF8F0;
+      border-radius: 20px;
+      border: 2px solid rgba(26,26,46,0.05);
+      box-shadow: 0 4px 16px rgba(26,26,46,0.05);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+    .mini-card:hover {
+      transform: translateY(-4px) rotate(0.5deg);
+      box-shadow: 0 12px 36px rgba(255,107,53,0.12);
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 16px; font-weight: 700;
+      border-radius: 100px; border: none;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .btn-orange { background: #FF6B35; color: #FFF8F0; }
+    .btn-orange:hover { box-shadow: 0 8px 25px rgba(255,107,53,0.4); }
+    .btn-cream { background: #FFF8F0; color: #1A1A2E; }
+    .btn-cream:hover { box-shadow: 0 8px 25px rgba(255,248,240,0.3); }
+    .btn-teal { background: #1B4965; color: #FFF8F0; }
+    .btn-teal:hover { box-shadow: 0 8px 25px rgba(27,73,101,0.3); }
+    .btn-outline { background: transparent; border: 2px solid #FF6B35; color: #FF6B35; }
+    .btn-outline:hover { background: #FF6B35; color: #FFF8F0; }
+  </style>
+</head>
+<body class="bg-cream overflow-x-hidden">
+
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="nav">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
+      <a href="#" class="font-display text-2xl font-700 text-text-dark flex items-center gap-2">
+        <span>🐾</span> Barktopia
+      </a>
+      <div class="hidden md:flex items-center gap-6 font-body font-600 text-sm">
+        <a href="#featured" class="text-text-muted hover:text-text-dark transition-colors">Products</a>
+        <a href="#why" class="text-text-muted hover:text-text-dark transition-colors">Why Enrichment</a>
+        <a href="#health" class="text-text-muted hover:text-text-dark transition-colors">Health</a>
+        <a href="https://barktopia.pet" target="_blank" class="btn btn-orange text-sm px-5 py-2.5">Explore Products</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative min-h-screen flex items-center pt-20 overflow-hidden" id="hero">
+    <div class="paw top-[12%] left-[6%] float-slow">🐾</div>
+    <div class="paw top-[30%] right-[3%] float-med" style="font-size:28px; opacity:0.04">🦴</div>
+    <div class="paw bottom-[25%] left-[12%] float-slow" style="font-size:24px; opacity:0.03">⭐</div>
+
+    <div class="max-w-7xl mx-auto px-6 md:px-12 w-full">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="mb-4"><span class="sticker">🎉 50% OFF Everything</span></div>
+          <h1 class="font-display text-text-dark text-[44px] md:text-[56px] lg:text-[72px] font-700 leading-[1.08] tracking-[-0.02em] mb-6" id="hero-headline">
+            Bored Dog?<br>Not Anymore.
+          </h1>
+          <p class="font-body text-text-muted text-lg md:text-xl leading-relaxed max-w-lg mb-8 hero-desc">
+            Enrichment toys that transform feeding into play. Puzzles, lick mats, and interactive toys that keep your dog mentally sharp and tail-waggingly happy.
+          </p>
+          <div class="flex flex-wrap gap-3 hero-cta">
+            <a href="https://barktopia.pet" target="_blank" class="btn btn-orange">
+              Explore Products
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="#why" class="btn btn-outline">Why Enrichment?</a>
+          </div>
+        </div>
+
+        <!-- Hero product -->
+        <div class="relative flex justify-center hero-image">
+          <div class="relative w-[300px] md:w-[400px] float-slow">
+            <div class="absolute inset-0 -inset-x-6 -inset-y-4 bg-peach rounded-[32px] -rotate-3"></div>
+            <img src="https://barktopia.pet/cdn/shop/files/S17e7c6cb0d9641d489cf85be3c7607bd8.webp?v=1774718688&width=800" alt="Yellow Duck Puzzle Feeder" class="relative z-10 w-full rounded-[24px] shadow-lg">
+            <div class="absolute -bottom-3 -right-3 z-20 bg-orange text-white font-display font-700 text-sm px-4 py-2 rounded-pill shadow-lg" style="transform: rotate(3deg)">
+              From $10.90
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <section class="py-5 bg-teal overflow-hidden">
+    <div class="marquee-track font-display text-white/80 text-lg md:text-xl font-600 whitespace-nowrap">
+      <span class="mx-8">🐾 ENRICHMENT TOYS</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">LICK MATS</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">PUZZLE FEEDERS</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">SMART TOYS</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">HIP & JOINT</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">🐾 ENRICHMENT TOYS</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">LICK MATS</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">PUZZLE FEEDERS</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">SMART TOYS</span>
+      <span class="mx-8">•</span>
+      <span class="mx-8">HIP & JOINT</span>
+      <span class="mx-8">•</span>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS (2x2 Big Cards) -->
+  <section class="py-20 md:py-28 bg-cream" id="featured">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="text-center mb-14">
+        <span class="sticker mb-4 inline-block">⭐ Fan Favorites</span>
+        <h2 class="font-display text-text-dark text-[32px] md:text-[48px] font-700 leading-[1.1] mt-4 section-title">
+          Toys They'll Obsess Over
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <!-- DuckBuddy -->
+        <a href="https://barktopia.pet" target="_blank" class="featured-card group">
+          <div class="relative bg-peach p-8 md:p-10 flex items-center justify-center aspect-[4/3]">
+            <img src="https://barktopia.pet/cdn/shop/files/S3cbdae03d56e49a78b945a70b34b811cU.webp?v=1774719898&width=800" alt="DuckBuddy" class="w-[70%] object-contain transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+            <div class="absolute top-5 right-5"><span class="sticker">50% OFF</span></div>
+          </div>
+          <div class="p-6 md:p-8 flex items-center justify-between">
+            <div>
+              <h3 class="font-display text-text-dark text-xl md:text-2xl font-600 mb-1">DuckBuddy</h3>
+              <p class="font-body text-text-muted text-sm">Calming squeaky duck companion</p>
+            </div>
+            <div class="text-right">
+              <span class="font-display text-orange text-2xl font-700 block">$20.90</span>
+              <span class="font-body text-text-muted/40 text-sm line-through">$30.90</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Yellow Duck -->
+        <a href="https://barktopia.pet" target="_blank" class="featured-card group">
+          <div class="relative bg-[#FFF5E6] p-8 md:p-10 flex items-center justify-center aspect-[4/3]">
+            <img src="https://barktopia.pet/cdn/shop/files/S17e7c6cb0d9641d489cf85be3c7607bd8.webp?v=1774718688&width=800" alt="Yellow Duck" class="w-[70%] object-contain transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
+            <div class="absolute top-5 right-5"><span class="sticker">50% OFF</span></div>
+          </div>
+          <div class="p-6 md:p-8 flex items-center justify-between">
+            <div>
+              <h3 class="font-display text-text-dark text-xl md:text-2xl font-600 mb-1">Yellow Duck</h3>
+              <p class="font-body text-text-muted text-sm">Interactive puzzle feeder</p>
+            </div>
+            <div class="text-right">
+              <span class="font-display text-orange text-2xl font-700 block">$32.90</span>
+              <span class="font-body text-text-muted/40 text-sm line-through">$42.90</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Forager Ball -->
+        <a href="https://barktopia.pet" target="_blank" class="featured-card group">
+          <div class="relative bg-[#F0F4FF] p-8 md:p-10 flex items-center justify-center aspect-[4/3]">
+            <img src="https://barktopia.pet/cdn/shop/files/1-2_1_1.png?v=1773843563&width=800" alt="Forager Ball" class="w-[70%] object-contain transition-transform duration-500 group-hover:scale-110 group-hover:rotate-2">
+            <div class="absolute top-5 right-5"><span class="sticker">50% OFF</span></div>
+          </div>
+          <div class="p-6 md:p-8 flex items-center justify-between">
+            <div>
+              <h3 class="font-display text-text-dark text-xl md:text-2xl font-600 mb-1">Forager Ball</h3>
+              <p class="font-body text-text-muted text-sm">Shake, train, clean & play</p>
+            </div>
+            <div class="text-right">
+              <span class="font-display text-orange text-2xl font-700 block">$29.90</span>
+              <span class="font-body text-text-muted/40 text-sm line-through">$39.90</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Puzzle -->
+        <a href="https://barktopia.pet" target="_blank" class="featured-card group">
+          <div class="relative bg-peach p-8 md:p-10 flex items-center justify-center aspect-[4/3]">
+            <img src="https://barktopia.pet/cdn/shop/files/Sa428927842d5450fb92d52eec2d4cf4cv.webp?v=1774129254&width=800" alt="Puzzle" class="w-[70%] object-contain transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-2">
+            <div class="absolute top-5 right-5"><span class="sticker">50% OFF</span></div>
+          </div>
+          <div class="p-6 md:p-8 flex items-center justify-between">
+            <div>
+              <h3 class="font-display text-text-dark text-xl md:text-2xl font-600 mb-1">Puzzle</h3>
+              <p class="font-body text-text-muted text-sm">IQ booster & slow feeder</p>
+            </div>
+            <div class="text-right">
+              <span class="font-display text-orange text-2xl font-700 block">$17.90</span>
+              <span class="font-body text-text-muted/40 text-sm line-through">$27.90</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY ENRICHMENT (Teal) -->
+  <section class="relative bg-teal py-20 md:py-28 overflow-hidden" id="why">
+    <div class="absolute top-0 left-0 w-full" style="transform:translateY(-98%)">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none" class="w-full h-[50px] md:h-[80px]">
+        <path d="M0,80 C480,20 960,60 1440,20 L1440,80 Z" fill="#1B4965"/>
+      </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+        <div class="relative">
+          <div class="aspect-[4/3] rounded-[24px] overflow-hidden bg-teal-light">
+            <img src="https://barktopia.pet/cdn/shop/files/photo_2026-03-13_16-01-30.jpg?v=1773410541&width=900" alt="Happy enriched dog" class="w-full h-full object-cover opacity-90">
+          </div>
+        </div>
+        <div>
+          <span class="sticker mb-6 inline-block" style="background: #FFD166; color: #1A1A2E;">🧠 Science-Backed</span>
+          <h2 class="font-display text-white text-[32px] md:text-[44px] font-700 leading-[1.1] mb-6 section-title">
+            Why Enrichment Changes Everything
+          </h2>
+          <div class="space-y-6">
+            <div class="flex items-start gap-4 benefit-item">
+              <div class="w-12 h-12 flex-shrink-0 bg-yellow rounded-full flex items-center justify-center">
+                <span class="text-xl">🧠</span>
+              </div>
+              <div>
+                <h3 class="font-display text-white text-lg font-600 mb-1">Mental Stimulation</h3>
+                <p class="font-body text-white/55 text-base">15 minutes of puzzle play = 1 hour of walking. Mental exercise matters as much as physical.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4 benefit-item">
+              <div class="w-12 h-12 flex-shrink-0 bg-yellow rounded-full flex items-center justify-center">
+                <span class="text-xl">🍽️</span>
+              </div>
+              <div>
+                <h3 class="font-display text-white text-lg font-600 mb-1">Healthier Eating</h3>
+                <p class="font-body text-white/55 text-base">Slow feeders prevent bloating, improve digestion, and make mealtime last 10x longer.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4 benefit-item">
+              <div class="w-12 h-12 flex-shrink-0 bg-yellow rounded-full flex items-center justify-center">
+                <span class="text-xl">😌</span>
+              </div>
+              <div>
+                <h3 class="font-display text-white text-lg font-600 mb-1">Calmer Behavior</h3>
+                <p class="font-body text-white/55 text-base">Enriched dogs are less destructive, less anxious, and genuinely happier. You'll notice within days.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FULL PRODUCT GRID -->
+  <section class="py-20 md:py-28 bg-cream" id="all-products">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-14">
+        <h2 class="font-display text-text-dark text-[28px] md:text-[40px] font-700 leading-[1.1] section-title">The Full Collection</h2>
+        <a href="https://barktopia.pet" target="_blank" class="font-body font-700 text-orange text-sm mt-4 md:mt-0 flex items-center gap-2 hover:gap-3 transition-all">
+          Visit Store
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+        <a href="https://barktopia.pet" target="_blank" class="mini-card group grid-item">
+          <div class="aspect-square bg-peach p-3 flex items-center justify-center overflow-hidden">
+            <img src="https://barktopia.pet/cdn/shop/files/S5f59059256e540d5a16abc6568f5c574I.webp?v=1774131419&width=400" alt="Smart Toy" class="w-[80%] object-contain transition-transform duration-500 group-hover:scale-110">
+          </div>
+          <div class="p-4">
+            <h3 class="font-display text-text-dark text-sm font-600 mb-1">Smart Toy</h3>
+            <div class="flex items-center gap-2">
+              <span class="font-display text-orange text-base font-700">$10.90</span>
+              <span class="text-text-muted/40 text-xs line-through">$20.90</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://barktopia.pet" target="_blank" class="mini-card group grid-item">
+          <div class="aspect-square bg-[#FFF5E6] p-3 flex items-center justify-center overflow-hidden">
+            <img src="https://barktopia.pet/cdn/shop/files/S0cd8a41ea52649dd80e6e761cb16c9cdO.webp?v=1774130454&width=400" alt="Lick Toy" class="w-[80%] object-contain transition-transform duration-500 group-hover:scale-110">
+          </div>
+          <div class="p-4">
+            <h3 class="font-display text-text-dark text-sm font-600 mb-1">Lick Toy</h3>
+            <div class="flex items-center gap-2">
+              <span class="font-display text-orange text-base font-700">$11.90</span>
+              <span class="text-text-muted/40 text-xs line-through">$21.90</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://barktopia.pet" target="_blank" class="mini-card group grid-item">
+          <div class="aspect-square bg-peach p-3 flex items-center justify-center overflow-hidden">
+            <img src="https://barktopia.pet/cdn/shop/files/Sea58b1cd75b34f1ba6c5281269252951L.webp?v=1772825981&width=400" alt="Soothing Lick Mat" class="w-[80%] object-contain transition-transform duration-500 group-hover:scale-110">
+          </div>
+          <div class="p-4">
+            <h3 class="font-display text-text-dark text-sm font-600 mb-1">Soothing Lick Mat</h3>
+            <div class="flex items-center gap-2">
+              <span class="font-display text-orange text-base font-700">$12.90</span>
+              <span class="text-text-muted/40 text-xs line-through">$22.90</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://barktopia.pet" target="_blank" class="mini-card group grid-item">
+          <div class="aspect-square bg-[#FFF5E6] p-3 flex items-center justify-center overflow-hidden">
+            <img src="https://barktopia.pet/cdn/shop/files/S3cbdae03d56e49a78b945a70b34b811cU.webp?v=1774719898&width=400" alt="DuckBuddy" class="w-[80%] object-contain transition-transform duration-500 group-hover:scale-110">
+          </div>
+          <div class="p-4">
+            <h3 class="font-display text-text-dark text-sm font-600 mb-1">DuckBuddy</h3>
+            <div class="flex items-center gap-2">
+              <span class="font-display text-orange text-base font-700">$20.90</span>
+              <span class="text-text-muted/40 text-xs line-through">$30.90</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HIP + JOINT (Mint) -->
+  <section class="py-20 md:py-28 bg-cream" id="health">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="bg-mint-bg rounded-[32px] p-8 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-10 items-center health-block">
+        <div>
+          <span class="inline-block bg-mint text-text-dark font-display font-700 text-sm px-4 py-2 rounded-full mb-6">🏥 Vet Formulated</span>
+          <h2 class="font-display text-text-dark text-[32px] md:text-[44px] font-700 leading-[1.1] mb-5 section-title">
+            Morning Hip + Joint Chews
+          </h2>
+          <p class="font-body text-text-muted text-lg leading-relaxed mb-6">
+            Keep them running, jumping, and playing for years to come. 100 delicious chewable supplements that support hip and joint health — they'll think it's a treat.
+          </p>
+          <div class="flex flex-wrap gap-3 mb-8">
+            <div class="bg-white rounded-2xl px-5 py-3 text-center shadow-sm">
+              <p class="font-display text-mint text-xl font-700">100</p>
+              <p class="font-body text-text-muted text-[11px] font-600 uppercase tracking-wider">Chews</p>
+            </div>
+            <div class="bg-white rounded-2xl px-5 py-3 text-center shadow-sm">
+              <p class="font-display text-mint text-xl font-700">Hip</p>
+              <p class="font-body text-text-muted text-[11px] font-600 uppercase tracking-wider">& Joint</p>
+            </div>
+            <div class="bg-white rounded-2xl px-5 py-3 text-center shadow-sm">
+              <p class="font-display text-mint text-xl font-700">Safe</p>
+              <p class="font-body text-text-muted text-[11px] font-600 uppercase tracking-wider">Non-Toxic</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <a href="https://barktopia.pet" target="_blank" class="btn" style="background:#06D6A0; color:#1A1A2E;">Shop Now — $39.90</a>
+            <span class="font-body text-text-muted/40 text-sm line-through">$49.90</span>
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <div class="w-[280px] md:w-[360px] float-med">
+            <img src="https://barktopia.pet/cdn/shop/files/photo_2026-03-18_16-26-24.jpg?v=1773844151&width=800" alt="Hip + Joint Chews" class="w-full rounded-[24px] shadow-xl">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST / GUARANTEES -->
+  <section class="py-16 bg-peach">
+    <div class="max-w-5xl mx-auto px-6 md:px-12">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div class="trust-item">
+          <div class="w-14 h-14 mx-auto mb-3 bg-white rounded-full flex items-center justify-center shadow-sm text-2xl">🚚</div>
+          <p class="font-display text-text-dark text-sm font-600">Free Worldwide<br>Shipping</p>
+        </div>
+        <div class="trust-item">
+          <div class="w-14 h-14 mx-auto mb-3 bg-white rounded-full flex items-center justify-center shadow-sm text-2xl">🛡️</div>
+          <p class="font-display text-text-dark text-sm font-600">Pet-Safe<br>Materials</p>
+        </div>
+        <div class="trust-item">
+          <div class="w-14 h-14 mx-auto mb-3 bg-white rounded-full flex items-center justify-center shadow-sm text-2xl">✅</div>
+          <p class="font-display text-text-dark text-sm font-600">Satisfaction<br>Guarantee</p>
+        </div>
+        <div class="trust-item">
+          <div class="w-14 h-14 mx-auto mb-3 bg-white rounded-full flex items-center justify-center shadow-sm text-2xl">💛</div>
+          <p class="font-display text-text-dark text-sm font-600">Thousands of<br>Happy Dogs</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FOOTER -->
+  <section class="relative bg-orange py-20 md:py-32 overflow-hidden" id="cta">
+    <div class="absolute top-0 left-0 w-full" style="transform:translateY(-98%)">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none" class="w-full h-[50px] md:h-[80px]">
+        <path d="M0,80 C360,30 720,60 1080,20 C1260,10 1380,40 1440,25 L1440,80 Z" fill="#FF6B35"/>
+      </svg>
+    </div>
+
+    <div class="relative z-10 text-center px-6 max-w-3xl mx-auto">
+      <h2 class="font-display text-white text-[36px] md:text-[52px] lg:text-[64px] font-700 leading-[1.1] mb-6 section-title">
+        Treat Your Dog to Something Amazing
+      </h2>
+      <p class="font-body text-white/70 text-lg mb-10">Enrichment toys starting at $10.90. Free worldwide shipping.</p>
+      <a href="https://barktopia.pet" target="_blank" class="btn btn-cream text-lg px-10 py-4">
+        Explore Barktopia
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-teal py-10">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
+      <span class="font-display text-white/80 text-lg font-600">🐾 Barktopia™</span>
+      <div class="flex items-center gap-6 text-white/40 font-body text-sm">
+        <a href="https://barktopia.pet" target="_blank" class="hover:text-white/70 transition-colors">Shop</a>
+        <span>·</span>
+        <span>Made with 🧡 for dogs everywhere</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/split-type@0.3.4/umd/index.min.js"></script>
+
+  <script>
+    const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    gsap.registerPlugin(ScrollTrigger);
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    // Nav
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('nav');
+      nav.style.background = window.scrollY > 50 ? 'rgba(255,248,240,0.95)' : 'transparent';
+      nav.style.backdropFilter = window.scrollY > 50 ? 'blur(12px)' : 'none';
+      nav.style.boxShadow = window.scrollY > 50 ? '0 2px 20px rgba(0,0,0,0.05)' : 'none';
+    });
+
+    // Hero
+    const heroTl = gsap.timeline({ delay: 0.2 });
+    const heroSplit = new SplitType('#hero-headline', { types: 'words' });
+    heroTl.from(heroSplit.words, { y: 50, opacity: 0, duration: 0.7, stagger: 0.06, ease: 'back.out(1.7)' });
+    heroTl.from('.hero-desc', { y: 20, opacity: 0, duration: 0.5, ease: 'back.out(1.4)' }, '-=0.3');
+    heroTl.from('.hero-cta', { y: 20, opacity: 0, duration: 0.5, ease: 'back.out(1.4)' }, '-=0.2');
+    heroTl.from('.hero-image', { scale: 0.85, opacity: 0, duration: 0.8, ease: 'back.out(1.7)' }, '-=0.6');
+    heroTl.from('.sticker', { scale: 0, rotation: -10, duration: 0.4, ease: 'elastic.out(1,0.5)' }, '-=0.8');
+
+    // Section titles
+    document.querySelectorAll('.section-title').forEach(title => {
+      const split = new SplitType(title, { types: 'words' });
+      gsap.from(split.words, {
+        y: 40, opacity: 0, duration: 0.7, stagger: 0.05, ease: 'back.out(1.7)',
+        scrollTrigger: { trigger: title, start: 'top 82%', toggleActions: 'play none none none' }
+      });
+    });
+
+    // Featured cards
+    gsap.from('.featured-card', {
+      y: 40, opacity: 0, scale: 0.95, duration: 0.6, stagger: 0.1, ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: '#featured .grid', start: 'top 75%', toggleActions: 'play none none none' }
+    });
+
+    // Benefits
+    gsap.from('.benefit-item', {
+      x: 30, opacity: 0, duration: 0.6, stagger: 0.12, ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: '#why .grid', start: 'top 70%', toggleActions: 'play none none none' }
+    });
+
+    // Grid items
+    gsap.from('.grid-item', {
+      y: 30, opacity: 0, scale: 0.9, duration: 0.5, stagger: 0.08, ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: '#all-products .grid', start: 'top 75%', toggleActions: 'play none none none' }
+    });
+
+    // Health block
+    gsap.from('.health-block', {
+      y: 40, opacity: 0, duration: 0.8, ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: '#health', start: 'top 70%', toggleActions: 'play none none none' }
+    });
+
+    // Trust
+    gsap.from('.trust-item', {
+      y: 20, opacity: 0, scale: 0.9, duration: 0.5, stagger: 0.08, ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: '.trust-item', start: 'top 85%', toggleActions: 'play none none none' }
+    });
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.globalTimeline.clear();
+      ScrollTrigger.getAll().forEach(st => st.kill());
+    }
+  </script>
+</body>
+</html>

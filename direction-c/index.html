@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barktopia — Your Dog Deserves Better</title>
+  <meta name="description" content="Interactive enrichment toys and supplements that keep your dog mentally stimulated and happy.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FFF8F0', peach: '#FFF0E0', orange: '#FF6B35', teal: '#1B4965',
+            'teal-light': '#2A6F97', yellow: '#FFD166', mint: '#06D6A0',
+            'mint-bg': '#E8FFF6', 'text-dark': '#1A1A2E', 'text-muted': '#5C5C7A',
+          },
+          fontFamily: {
+            display: ['Fredoka', 'sans-serif'],
+            body: ['Nunito', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-family: 'Nunito', sans-serif; background: #FFF8F0; color: #1A1A2E; }
+    html.lenis, html.lenis body { height: auto; }
+
+    .float-slow { animation: floatSlow 4s ease-in-out infinite; }
+    @keyframes floatSlow { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+    .text-outline {
+      -webkit-text-stroke: 2px currentColor;
+      color: transparent;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; font-family: 'Fredoka', sans-serif;
+      font-size: 16px; font-weight: 700; border-radius: 100px; border: none;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .btn-orange { background: #FF6B35; color: #FFF8F0; }
+    .btn-orange:hover { box-shadow: 0 8px 25px rgba(255,107,53,0.4); }
+    .btn-cream { background: #FFF8F0; color: #1A1A2E; }
+    .btn-cream:hover { box-shadow: 0 8px 25px rgba(255,248,240,0.3); }
+    .btn-teal { background: #1B4965; color: #FFF8F0; }
+    .btn-teal:hover { box-shadow: 0 8px 25px rgba(27,73,101,0.3); }
+
+    .product-slide {
+      opacity: 0;
+      transform: translateX(60px);
+    }
+
+    .sticker {
+      display: inline-block; background: #FFD166; color: #1A1A2E;
+      font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 12px;
+      padding: 5px 12px; border-radius: 100px; transform: rotate(-3deg);
+      box-shadow: 2px 3px 0 rgba(0,0,0,0.08);
+    }
+
+    .stamp {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 3px solid currentColor; font-family: 'Fredoka', sans-serif;
+      font-weight: 700; font-size: 12px; text-align: center;
+      transform: rotate(-8deg); line-height: 1.2;
+    }
+
+    .product-card-c {
+      background: #FFF8F0; border-radius: 20px;
+      border: 2px solid rgba(26,26,46,0.05);
+      box-shadow: 0 4px 16px rgba(26,26,46,0.05);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+    .product-card-c:hover { transform: translateY(-5px) rotate(0.5deg); box-shadow: 0 12px 36px rgba(255,107,53,0.12); }
+  </style>
+</head>
+<body class="bg-cream overflow-x-hidden">
+
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 w-full z-50 mix-blend-difference">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-5 flex items-center justify-between">
+      <a href="#" class="font-display text-xl font-700 text-white">🐾 Barktopia</a>
+      <a href="https://barktopia.pet" target="_blank" class="hidden md:inline-flex text-white/70 hover:text-white font-body text-sm font-600 transition-colors">Shop</a>
+    </div>
+  </nav>
+
+  <!-- HERO: Full viewport, dramatic -->
+  <section class="relative h-screen flex items-center justify-center bg-teal overflow-hidden" id="hero">
+    <div class="absolute inset-0 opacity-20" style="background: radial-gradient(circle at 60% 60%, #FF6B35 0%, transparent 50%)"></div>
+
+    <div class="relative z-10 text-center px-6 max-w-4xl">
+      <h1 class="font-display text-white text-[52px] md:text-[80px] lg:text-[100px] font-700 leading-[1.05] tracking-[-0.02em] mb-6" id="hero-headline">
+        Your. Dog.<br>Deserves. Better.
+      </h1>
+      <p class="font-body text-white/50 text-lg md:text-xl mb-10 hero-sub" style="opacity:0; transform:translateY(20px)">
+        Interactive enrichment toys that transform boredom into joy.
+      </p>
+      <div class="hero-cta" style="opacity:0; transform:scale(0.8)">
+        <a href="#problem" class="btn btn-orange text-lg px-10 py-4">
+          Discover How
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Floating product in bg -->
+    <div class="absolute bottom-[10%] right-[10%] w-[120px] md:w-[180px] opacity-20 float-slow pointer-events-none">
+      <img src="https://barktopia.pet/cdn/shop/files/1-2_1_1.png?v=1773843563&width=400" alt="" class="w-full">
+    </div>
+
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/30 text-xs font-body tracking-[0.3em] uppercase scroll-hint" style="opacity:0">
+      Scroll to begin
+    </div>
+  </section>
+
+  <!-- THE PROBLEM -->
+  <section class="py-24 md:py-36 bg-cream" id="problem">
+    <div class="max-w-4xl mx-auto px-6 md:px-12 text-center">
+      <h2 class="font-display text-text-dark text-[36px] md:text-[56px] lg:text-[68px] font-700 leading-[1.08] mb-8 section-title">
+        Dogs eat in 30 seconds. Then they have nothing to do.
+      </h2>
+      <p class="font-body text-text-muted text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-12">
+        Chewed shoes. Barking at nothing. Separation anxiety. Your dog isn't bad — they're bored. Their brain needs a workout just like their body.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+        <div class="bg-peach rounded-[20px] p-6 problem-item">
+          <div class="text-3xl mb-3">😤</div>
+          <h3 class="font-display text-text-dark text-lg font-600 mb-2">Destructive Behavior</h3>
+          <p class="font-body text-text-muted text-sm">Bored dogs chew furniture, dig holes, and destroy your favourite things.</p>
+        </div>
+        <div class="bg-peach rounded-[20px] p-6 problem-item">
+          <div class="text-3xl mb-3">😰</div>
+          <h3 class="font-display text-text-dark text-lg font-600 mb-2">Anxiety & Stress</h3>
+          <p class="font-body text-text-muted text-sm">Without mental stimulation, dogs develop stress, anxiety, and obsessive behaviours.</p>
+        </div>
+        <div class="bg-peach rounded-[20px] p-6 problem-item">
+          <div class="text-3xl mb-3">🍽️</div>
+          <h3 class="font-display text-text-dark text-lg font-600 mb-2">Unhealthy Eating</h3>
+          <p class="font-body text-text-muted text-sm">Speed-eating causes bloating, vomiting, and poor digestion. Meals shouldn't last 30 seconds.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SOLUTION REVEAL (Orange) -->
+  <section class="relative bg-orange py-24 md:py-36 overflow-hidden" id="solution">
+    <div class="absolute top-0 left-0 w-full" style="transform:translateY(-98%)">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none" class="w-full h-[60px] md:h-[80px]">
+        <path d="M0,80 C480,20 960,60 1440,25 L1440,80 Z" fill="#FF6B35"/>
+      </svg>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-6 md:px-12 text-center relative z-10">
+      <h2 class="font-display text-white text-[40px] md:text-[64px] lg:text-[76px] font-700 leading-[1.05] mb-6 section-title">
+        Meet Barktopia.
+      </h2>
+      <p class="font-body text-white/70 text-xl mb-16 max-w-2xl mx-auto">
+        Enrichment toys that transform feeding into play, boredom into curiosity, and anxious dogs into happy ones.
+      </p>
+
+      <!-- Products fly in -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div class="product-slide bg-white/15 backdrop-blur-sm rounded-[20px] p-4 text-center">
+          <img src="https://barktopia.pet/cdn/shop/files/S3cbdae03d56e49a78b945a70b34b811cU.webp?v=1774719898&width=400" alt="DuckBuddy" class="w-full aspect-square object-contain mb-3">
+          <p class="font-display text-white text-sm font-600">DuckBuddy</p>
+          <p class="font-display text-yellow text-base font-700">$20.90</p>
+        </div>
+        <div class="product-slide bg-white/15 backdrop-blur-sm rounded-[20px] p-4 text-center">
+          <img src="https://barktopia.pet/cdn/shop/files/S17e7c6cb0d9641d489cf85be3c7607bd8.webp?v=1774718688&width=400" alt="Yellow Duck" class="w-full aspect-square object-contain mb-3">
+          <p class="font-display text-white text-sm font-600">Yellow Duck</p>
+          <p class="font-display text-yellow text-base font-700">$32.90</p>
+        </div>
+        <div class="product-slide bg-white/15 backdrop-blur-sm rounded-[20px] p-4 text-center">
+          <img src="https://barktopia.pet/cdn/shop/files/1-2_1_1.png?v=1773843563&width=400" alt="Forager Ball" class="w-full aspect-square object-contain mb-3">
+          <p class="font-display text-white text-sm font-600">Forager Ball</p>
+          <p class="font-display text-yellow text-base font-700">$29.90</p>
+        </div>
+        <div class="product-slide bg-white/15 backdrop-blur-sm rounded-[20px] p-4 text-center">
+          <img src="https://barktopia.pet/cdn/shop/files/Sa428927842d5450fb92d52eec2d4cf4cv.webp?v=1774129254&width=400" alt="Puzzle" class="w-full aspect-square object-contain mb-3">
+          <p class="font-display text-white text-sm font-600">Puzzle</p>
+          <p class="font-display text-yellow text-base font-700">$17.90</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT DEEP DIVES -->
+  <section class="bg-cream" id="deep-dives">
+    <!-- Product 1: DuckBuddy -->
+    <div class="py-20 md:py-28 product-dive">
+      <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="relative">
+          <div class="aspect-square rounded-[24px] overflow-hidden bg-peach flex items-center justify-center p-8">
+            <img src="https://barktopia.pet/cdn/shop/files/S3cbdae03d56e49a78b945a70b34b811cU.webp?v=1774719898&width=800" alt="DuckBuddy" class="w-[80%] object-contain">
+          </div>
+          <div class="absolute top-4 right-4"><span class="sticker">50% OFF</span></div>
+        </div>
+        <div class="dive-info">
+          <p class="font-body text-orange text-sm font-700 tracking-[0.1em] uppercase mb-3">Comfort Toy</p>
+          <h3 class="font-display text-text-dark text-[32px] md:text-[44px] font-700 leading-[1.1] mb-4">DuckBuddy</h3>
+          <p class="font-body text-text-muted text-lg leading-relaxed mb-6">A calming squeaky duck companion that soothes anxious dogs. Available in three sizes — small, medium, and large. The gentle squeak activates their natural playfulness while providing comfort.</p>
+          <div class="flex items-center gap-4">
+            <span class="font-display text-orange text-3xl font-700">$20.90</span>
+            <span class="font-body text-text-muted/40 line-through">$30.90</span>
+          </div>
+          <a href="https://barktopia.pet" target="_blank" class="btn btn-orange mt-6">Shop DuckBuddy</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 2: Forager Ball -->
+    <div class="py-20 md:py-28 bg-peach product-dive">
+      <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="md:order-2 relative">
+          <div class="aspect-square rounded-[24px] overflow-hidden bg-cream flex items-center justify-center p-8">
+            <img src="https://barktopia.pet/cdn/shop/files/1-2_1_1.png?v=1773843563&width=800" alt="Forager Ball" class="w-[80%] object-contain">
+          </div>
+          <div class="absolute top-4 left-4"><span class="sticker">50% OFF</span></div>
+        </div>
+        <div class="md:order-1 dive-info">
+          <p class="font-body text-orange text-sm font-700 tracking-[0.1em] uppercase mb-3">Active Play</p>
+          <h3 class="font-display text-text-dark text-[32px] md:text-[44px] font-700 leading-[1.1] mb-4">Forager Ball</h3>
+          <p class="font-body text-text-muted text-lg leading-relaxed mb-6">Shake it, roll it, chase it. The Forager Ball is an innovative multi-use toy for training, tooth cleaning, and boredom busting. Fill it with treats and watch them work for their reward.</p>
+          <div class="flex items-center gap-4">
+            <span class="font-display text-orange text-3xl font-700">$29.90</span>
+            <span class="font-body text-text-muted/40 line-through">$39.90</span>
+          </div>
+          <a href="https://barktopia.pet" target="_blank" class="btn btn-orange mt-6">Shop Forager Ball</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 3: Puzzle -->
+    <div class="py-20 md:py-28 product-dive">
+      <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="relative">
+          <div class="aspect-square rounded-[24px] overflow-hidden bg-[#F0F4FF] flex items-center justify-center p-8">
+            <img src="https://barktopia.pet/cdn/shop/files/Sa428927842d5450fb92d52eec2d4cf4cv.webp?v=1774129254&width=800" alt="Puzzle" class="w-[80%] object-contain">
+          </div>
+          <div class="absolute top-4 right-4"><span class="sticker">50% OFF</span></div>
+        </div>
+        <div class="dive-info">
+          <p class="font-body text-orange text-sm font-700 tracking-[0.1em] uppercase mb-3">Brain Training</p>
+          <h3 class="font-display text-text-dark text-[32px] md:text-[44px] font-700 leading-[1.1] mb-4">Puzzle</h3>
+          <p class="font-body text-text-muted text-lg leading-relaxed mb-6">Designed to increase your dog's IQ while slowing down eating. Hide treats in the compartments and watch your pup figure out the puzzle. Available in 5 fun colours.</p>
+          <div class="flex items-center gap-4">
+            <span class="font-display text-orange text-3xl font-700">$17.90</span>
+            <span class="font-body text-text-muted/40 line-through">$27.90</span>
+          </div>
+          <a href="https://barktopia.pet" target="_blank" class="btn btn-orange mt-6">Shop Puzzle</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEALTH SECTION (Mint) -->
+  <section class="py-20 md:py-28 bg-mint-bg" id="health">
+    <div class="max-w-5xl mx-auto px-6 md:px-12 text-center">
+      <span class="inline-block bg-mint text-text-dark font-display font-700 text-sm px-4 py-2 rounded-full mb-6">🏥 Vet Formulated</span>
+      <h2 class="font-display text-text-dark text-[32px] md:text-[48px] font-700 leading-[1.1] mb-6 section-title">
+        Morning Hip + Joint Chews
+      </h2>
+      <p class="font-body text-text-muted text-lg max-w-2xl mx-auto mb-12">
+        100 delicious chewable supplements that support mobility and joint health. Your dog will think it's a treat — you'll know it's medicine.
+      </p>
+      <div class="max-w-sm mx-auto float-slow mb-10">
+        <img src="https://barktopia.pet/cdn/shop/files/photo_2026-03-18_16-26-24.jpg?v=1773844151&width=800" alt="Hip + Joint Chews" class="w-full rounded-[24px] shadow-xl">
+      </div>
+      <div class="flex items-center justify-center gap-4">
+        <a href="https://barktopia.pet" target="_blank" class="btn" style="background:#06D6A0; color:#1A1A2E;">Shop Now — $39.90</a>
+        <span class="font-body text-text-muted/40 line-through">$49.90</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST (Teal) -->
+  <section class="bg-teal py-16 md:py-20">
+    <div class="max-w-5xl mx-auto px-6 md:px-12">
+      <div class="flex flex-wrap items-center justify-center gap-8 md:gap-16">
+        <div class="stamp text-yellow">Free<br>Shipping</div>
+        <div class="stamp text-yellow">Pet<br>Safe</div>
+        <div class="stamp text-yellow">100%<br>Guarantee</div>
+        <div class="stamp text-yellow">Non<br>Toxic</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-teal py-20 md:py-28 text-center">
+    <div class="max-w-3xl mx-auto px-6">
+      <p class="font-display text-white text-[36px] md:text-[48px] font-700 leading-[1.1] mb-4">🐾 Barktopia™</p>
+      <p class="font-body text-white/40 text-base mb-10">Happy dogs, happy homes.</p>
+      <a href="https://barktopia.pet" target="_blank" class="btn btn-orange text-lg px-10 py-4">
+        Shop Now
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="mt-12 pt-6 border-t border-white/10">
+        <p class="text-white/20 text-xs font-body">&copy; 2026 Barktopia. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/split-type@0.3.4/umd/index.min.js"></script>
+
+  <script>
+    const lenis = new Lenis({ lerp: 0.07, smoothWheel: true });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    gsap.registerPlugin(ScrollTrigger);
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    // Hero
+    const heroTl = gsap.timeline({ delay: 0.4 });
+    const heroSplit = new SplitType('#hero-headline', { types: 'words' });
+    heroTl.from(heroSplit.words, { y: 60, opacity: 0, scale: 0.8, duration: 0.7, stagger: 0.1, ease: 'back.out(1.7)' });
+    heroTl.to('.hero-sub', { opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.4)' }, '-=0.3');
+    heroTl.to('.hero-cta', { opacity: 1, scale: 1, duration: 0.5, ease: 'elastic.out(1,0.5)' }, '-=0.2');
+    heroTl.to('.scroll-hint', { opacity: 1, duration: 0.5 }, '-=0.1');
+
+    // Parallax hero title
+    gsap.to('#hero-headline', {
+      y: -60, scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
+    });
+
+    // Section titles
+    document.querySelectorAll('.section-title').forEach(title => {
+      const split = new SplitType(title, { types: 'words' });
+      gsap.from(split.words, {
+        y: 40, opacity: 0, duration: 0.7, stagger: 0.05, ease: 'back.out(1.7)',
+        scrollTrigger: { trigger: title, start: 'top 82%', toggleActions: 'play none none none' }
+      });
+    });
+
+    // Problem items
+    gsap.from('.problem-item', {
+      y: 30, opacity: 0, scale: 0.9, duration: 0.6, stagger: 0.1, ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: '#problem .grid', start: 'top 75%', toggleActions: 'play none none none' }
+    });
+
+    // Product slides on orange
+    gsap.to('.product-slide', {
+      opacity: 1, x: 0, duration: 0.7, stagger: 0.12, ease: 'back.out(1.7)',
+      scrollTrigger: { trigger: '#solution .grid', start: 'top 70%', toggleActions: 'play none none none' }
+    });
+
+    // Product deep dives
+    document.querySelectorAll('.product-dive').forEach(dive => {
+      const info = dive.querySelector('.dive-info');
+      if (info) {
+        gsap.from(info.children, {
+          y: 30, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'back.out(1.4)',
+          scrollTrigger: { trigger: dive, start: 'top 65%', toggleActions: 'play none none none' }
+        });
+      }
+    });
+
+    // Stamps
+    gsap.from('.stamp', {
+      scale: 0, rotation: -20, opacity: 0, duration: 0.5, stagger: 0.1, ease: 'elastic.out(1,0.5)',
+      scrollTrigger: { trigger: '.stamp', start: 'top 80%', toggleActions: 'play none none none' }
+    });
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.globalTimeline.clear();
+      ScrollTrigger.getAll().forEach(st => st.kill());
+      document.querySelectorAll('.product-slide').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+      document.querySelectorAll('[style*="opacity:0"]').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+    }
+  </script>
+</body>
+</html>

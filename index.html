@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barktopia — Design Directions Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Nunito', sans-serif; background: #FFF8F0; color: #1A1A2E; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+    h1 { font-family: 'Fredoka', sans-serif; font-size: 36px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .subtitle { color: #5C5C7A; font-size: 16px; margin-bottom: 40px; text-align: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; width: 100%; }
+    .card {
+      background: white; border-radius: 20px; padding: 32px; text-align: center;
+      border: 2px solid rgba(26,26,46,0.06);
+      box-shadow: 0 4px 20px rgba(26,26,46,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none; color: #1A1A2E;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(255,107,53,0.12); }
+    .card h2 { font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .card .tag { font-size: 13px; color: #FF6B35; font-weight: 700; margin-bottom: 12px; }
+    .card p { color: #5C5C7A; font-size: 14px; line-height: 1.5; }
+    .card .arrow { display: inline-block; margin-top: 16px; background: #FF6B35; color: white; padding: 10px 24px; border-radius: 100px; font-family: 'Fredoka'; font-weight: 700; font-size: 14px; }
+    .note { margin-top: 40px; color: #5C5C7A; font-size: 13px; text-align: center; max-width: 500px; }
+  </style>
+</head>
+<body>
+  <h1>🐾 Barktopia — Design Directions</h1>
+  <p class="subtitle">Click to preview each direction. Let us know which one you love!</p>
+
+  <div class="grid">
+    <a href="direction-a/" class="card">
+      <div class="tag">Direction A</div>
+      <h2>The Playground</h2>
+      <p>Maximum energy, maximum color. Product collage hero, bold orange problem section, full product grid, bouncy animations.</p>
+      <span class="arrow">Preview A →</span>
+    </a>
+
+    <a href="direction-b/" class="card">
+      <div class="tag">Direction B</div>
+      <h2>The Toy Box</h2>
+      <p>Product-first, clean but colorful. Large featured cards, scrolling marquee, teal benefits section, structured layout.</p>
+      <span class="arrow">Preview B →</span>
+    </a>
+
+    <a href="direction-c/" class="card">
+      <div class="tag">Direction C</div>
+      <h2>The Experience</h2>
+      <p>Story-driven and dramatic. Dark teal hero, problem narrative, product reveals on orange, deep-dive product sections.</p>
+      <span class="arrow">Preview C →</span>
+    </a>
+
+    <a href="direction-d/" class="card">
+      <div class="tag">Direction D</div>
+      <h2>Best of All</h2>
+      <p>The greatest hits. B's hero + marquee, A's orange problem section, B's featured cards, stamp trust badges, scroll progress bar.</p>
+      <span class="arrow">Preview D →</span>
+    </a>
+  </div>
+
+  <p class="note">Best viewed on desktop for the full animation experience. All links go to the live Barktopia store.</p>
+</body>
+</html>
